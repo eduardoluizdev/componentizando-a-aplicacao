@@ -7,22 +7,8 @@ import { api } from './services/api';
 
 import './styles/global.scss';
 
+import { GenreResponseProps, MovieProps } from './types';
 
-interface GenreResponseProps {
-  id: number;
-  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-  title: string;
-}
-
-interface MovieProps {
-  Title: string;
-  Poster: string;
-  Ratings: Array<{
-    Source: string;
-    Value: string;
-  }>;
-  Runtime: string;
-}
 
 export function App() {
   const [selectedGenreId, setSelectedGenreId] = useState(1);
@@ -39,12 +25,12 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
-      setMovies(response.data);
-    });
-
-    api.get<GenreResponseProps>(`genres/${selectedGenreId}`).then(response => {
-      setSelectedGenre(response.data);
+    Promise.all([
+      api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`),
+      api.get<GenreResponseProps>(`genres/${selectedGenreId}`)
+    ]).then(([moviesResponse, selectedGenderResponse]) => {
+      setMovies(moviesResponse.data);
+      setSelectedGenre(selectedGenderResponse.data);
     })
   }, [selectedGenreId]);
 
@@ -58,15 +44,14 @@ export function App() {
       <SideBar
         genres={genres}
         selectedGenreId={selectedGenreId}
-        handleClick={handleClickButton}
+        handleClickButton={handleClickButton}
       />
 
-      <div className="container">
-        <Content
-          movies={movies}
-          titleGender={selectedGenre.title}
-        />
-      </div>
+      <Content
+        movies={movies}
+        selectedGenre={selectedGenre}
+      />
+
     </div>
   )
 }

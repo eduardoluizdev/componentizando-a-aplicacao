@@ -1,20 +1,15 @@
 import { Button } from './Button'
+import { GenreResponseProps } from '../types';
+
 import '../styles/sidebar.scss';
 
-type GenderProps = {
-  id: number;
-  title: string;
-  name: "action" | "comedy" | "documentary" | "drama" | "horror" | "family";
-}
-
 interface SideBarProps {
-  genres: GenderProps[];
+  genres: GenreResponseProps[];
   selectedGenreId: number;
-  handleClick: Function;
+  handleClickButton: (id: number) => void;
 }
 
-export function SideBar(props: SideBarProps) {
-  const { genres, handleClick, selectedGenreId } = props;
+export function SideBar({ genres, selectedGenreId, handleClickButton }: SideBarProps) {
 
   return (
     <nav className="sidebar">
@@ -28,7 +23,7 @@ export function SideBar(props: SideBarProps) {
             title={genre.title}
             iconName={genre.name}
             selected={selectedGenreId === genre.id}
-            onClick={() => handleClick(genre.id)}
+            onClick={() => handleClickButton(genre.id)}
           />
         ))}
       </div>

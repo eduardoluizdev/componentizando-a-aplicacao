@@ -1,32 +1,21 @@
 import { MovieCard } from "./MovieCard";
+import { GenreResponseProps, MovieProps } from "../types";
 
 import '../styles/content.scss';
 
-interface Ranting {
-  Source: string;
-  Value: string;
-}
-
-interface MovieProps {
-  Title: string;
-  Poster: string;
-  Ratings: Ranting[];
-  Runtime: string;
-}
 
 interface ContentProps {
   movies: MovieProps[];
-  titleGender: string;
+  selectedGenre: GenreResponseProps;
 }
 
 
-export function Content(props: ContentProps) {
-  const { titleGender, movies } = props
+export function Content({ movies, selectedGenre }: ContentProps) {
 
   return (
-    <>
+    <div className="container">
       <header>
-        <span className="category">Categoria:<span> {titleGender}</span></span>
+        <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
       </header>
 
       <main>
@@ -36,6 +25,6 @@ export function Content(props: ContentProps) {
           ))}
         </div>
       </main>
-    </>
+    </div>
   )
 }
